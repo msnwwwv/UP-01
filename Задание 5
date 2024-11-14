@@ -1,0 +1,42 @@
+import java.io.*;
+import java.util.regex.*;
+
+public class RemoveComments {
+    public static void main(String[] args) {
+        // Имя файла с кодом Java
+        String filePath = "PathToFile/YourJavaFile.java"; // Укажите путь к вашему Java файлу
+
+        try {
+            // Чтение файла
+            BufferedReader reader = new BufferedReader(new FileReader(filePath));
+            StringBuilder code = new StringBuilder();
+            String line;
+
+            while ((line = reader.readLine()) != null) {
+                code.append(line).append("\n");
+            }
+            reader.close();
+
+            // Регулярное выражение для удаления комментариев
+            String noComments = removeComments(code.toString());
+
+            // Запись обновленного кода обратно в файл
+            BufferedWriter writer = new BufferedWriter(new FileWriter("CleanedFile.java"));
+            writer.write(noComments);
+            writer.close();
+
+            System.out.println("Комментарии успешно удалены.");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Метод для удаления комментариев
+    public static String removeComments(String code) {
+        // Регулярное выражение для однострочных и многострочных комментариев
+        String regex = "(?s)/\\*.*?\\*/|//.*";
+
+        // Замена всех комментариев на пустую строку
+        return code.replaceAll(regex, "").trim();
+    }
+}
