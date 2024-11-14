@@ -1,0 +1,86 @@
+// Класс Крылья
+class Wings {
+    private String type;
+
+    public Wings(String type) {
+        this.type = type;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    // Метод для махания крыльями
+    public void flap() {
+        System.out.println("Крылья машут.");
+    }
+}
+
+// Класс Клюв
+class Beak {
+    private String size;
+
+    public Beak(String size) {
+        this.size = size;
+    }
+
+    public String getSize() {
+        return size;
+    }
+
+    // Метод для клевания
+    public void peck() {
+        System.out.println("Клюв клюет пищу.");
+    }
+}
+
+// Класс Птица
+class Bird {
+    private Wings wings;
+    private Beak beak;
+
+    public Bird(Wings wings, Beak beak) {
+        this.wings = wings;
+        this.beak = beak;
+    }
+
+    // Метод для полета
+    public void fly() {
+        System.out.println("Птица летит с крыльями типа " + wings.getType() + ".");
+        wings.flap();
+    }
+
+    // Метод для посадки
+    public void land() {
+        System.out.println("Птица садится.");
+    }
+
+    // Метод для питания
+    public void eat() {
+        System.out.println("Птица питается, используя клюв размера " + beak.getSize() + ".");
+        beak.peck();
+    }
+
+    // Метод для атаки
+    public void attack() {
+        System.out.println("Птица атакует.");
+        beak.peck();
+    }
+}
+
+public class BirdTest {
+    public static void main(String[] args) {
+        // Создание объекта Крылья и Клюв
+        Wings wings = new Wings("большие");
+        Beak beak = new Beak("маленький");
+
+        // Создание объекта Птица с заданными крыльями и клювом
+        Bird bird = new Bird(wings, beak);
+
+        // Демонстрация действий птицы
+        bird.fly();      // Птица летит
+        bird.land();     // Птица садится
+        bird.eat();      // Птица питается
+        bird.attack();   // Птица атакует
+    }
+}
