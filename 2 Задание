@@ -1,0 +1,76 @@
+import java.util.Scanner;
+
+public class LocalMaximumFinder {
+    
+    // Метод для проверки, является ли элемент локальным максимумом
+    public static boolean isLocalMaximum(int[][] matrix, int row, int col) {
+        int current = matrix[row][col];
+        
+        // Проверяем соседей вокруг элемента
+        for (int i = -1; i <= 1; i++) {
+            for (int j = -1; j <= 1; j++) {
+                if (i == 0 && j == 0) continue; // Пропускаем сам элемент
+                int newRow = row + i;
+                int newCol = col + j;
+                
+                // Проверяем, что сосед находится в пределах матрицы
+                if (newRow >= 0 && newRow < matrix.length && newCol >= 0 && newCol < matrix[0].length) {
+                    if (matrix[newRow][newCol] >= current) {
+                        return false; // Если хотя бы один сосед больше или равен, то это не локальный максимум
+                    }
+                }
+            }
+        }
+        return true; // Все соседи меньше, значит это локальный максимум
+    }
+
+    // Метод для поиска наименьшего среди локальных максимумов
+    public static int findSmallestLocalMaximum(int[][] matrix) {
+        int minLocalMax = Integer.MAX_VALUE;
+        
+        // Проходим по всем элементам матрицы
+        for (int row = 0; row < matrix.length; row++) {
+            for (int col = 0; col < matrix[row].length; col++) {
+                if (isLocalMaximum(matrix, row, col)) {
+                    // Обновляем минимальный локальный максимум
+                    minLocalMax = Math.min(minLocalMax, matrix[row][col]);
+                }
+            }
+        }
+        
+        // Если локальных максимумов не найдено, возвращаем специальное значение
+        if (minLocalMax == Integer.MAX_VALUE) {
+            System.out.println("Локальные максимумы не найдены.");
+            return -1;
+        }
+        
+        return minLocalMax;
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        
+        // Ввод размера матрицы
+        System.out.print("Введите количество строк: ");
+        int rows = scanner.nextInt();
+        System.out.print("Введите количество столбцов: ");
+        int cols = scanner.nextInt();
+        
+        int[][] matrix = new int[rows][cols];
+        
+        // Ввод элементов матрицы
+        System.out.println("Введите элементы матрицы:");
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                matrix[i][j] = scanner.nextInt();
+            }
+        }
+        
+        // Поиск наименьшего среди локальных максимумов
+        int result = findSmallestLocalMaximum(matrix);
+        
+        if (result != -1) {
+            System.out.println("Наименьший среди локальных максимумов: " + result);
+        }
+    }
+}
