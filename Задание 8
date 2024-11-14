@@ -1,0 +1,52 @@
+import javax.swing.*;
+import java.awt.*;
+
+public class RocketDrawingGraphics extends JPanel {
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+
+        // Преобразование в Graphics2D для более качественной отрисовки
+        Graphics2D g2d = (Graphics2D) g;
+
+        // Устанавливаем цвет для рисования
+        g2d.setColor(Color.BLACK);
+
+        // Рисуем верхушку ракеты (треугольник)
+        int[] xPoints = {150, 200, 100}; // Координаты x для треугольника
+        int[] yPoints = {50, 150, 150};  // Координаты y для треугольника
+        g2d.fillPolygon(xPoints, yPoints, 3);
+
+        // Рисуем корпус ракеты (прямоугольник)
+        g2d.fillRect(100, 150, 100, 200);
+
+        // Рисуем окно на корпусе ракеты (овал)
+        g2d.setColor(Color.WHITE);
+        g2d.fillOval(125, 200, 50, 50);
+        g2d.setColor(Color.BLACK);
+        g2d.drawOval(125, 200, 50, 50);
+
+        // Рисуем нижние опоры ракеты (треугольники)
+        int[] xLeftWing = {100, 80, 100}; // Левая опора
+        int[] yLeftWing = {350, 400, 400};
+        g2d.fillPolygon(xLeftWing, yLeftWing, 3);
+
+        int[] xRightWing = {200, 220, 200}; // Правая опора
+        int[] yRightWing = {350, 400, 400};
+        g2d.fillPolygon(xRightWing, yRightWing, 3);
+
+        
+    }
+
+    public static void main(String[] args) {
+        // Создаем окно
+        JFrame frame = new JFrame("Rocket Drawing");
+        RocketDrawingGraphics panel = new RocketDrawingGraphics();
+
+        frame.add(panel);
+        frame.setSize(400, 500); // Размер окна
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Закрытие программы
+        frame.setVisible(true); // Отображаем окно
+    }
+}
