@@ -1,0 +1,86 @@
+import java.util.ArrayList;
+import java.util.List;
+
+// Основной класс Account
+class Account {
+    private double balance;  // Баланс счета
+    private List<Transaction> transactions;  // Список всех операций
+
+    // Конструктор для создания аккаунта с начальным балансом
+    public Account(double initialBalance) {
+        this.balance = initialBalance;
+        this.transactions = new ArrayList<>();
+    }
+
+    // Метод для пополнения счета
+    public void deposit(double amount) {
+        balance += amount;
+        transactions.add(new Transaction("Поступление", amount, balance));
+        System.out.println("Пополнение счета на " + amount + ". Текущий баланс: " + balance);
+    }
+
+    // Метод для снятия средств
+    public void withdraw(double amount) {
+        if (amount > balance) {
+            System.out.println("Недостаточно средств для снятия.");
+        } else {
+            balance -= amount;
+            transactions.add(new Transaction("Снятие", amount, balance));
+            System.out.println("Снятие средств на " + amount + ". Текущий баланс: " + balance);
+        }
+    }
+
+    // Метод для осуществления платежа
+    public void payment(double amount) {
+        if (amount > balance) {
+            System.out.println("Недостаточно средств для оплаты.");
+        } else {
+            balance -= amount;
+            transactions.add(new Transaction("Платеж", amount, balance));
+            System.out.println("Платеж на " + amount + ". Текущий баланс: " + balance);
+        }
+    }
+
+    // Метод для вывода всех операций
+    public void printTransactions() {
+        System.out.println("Все операции по счету:");
+        for (Transaction transaction : transactions) {
+            System.out.println(transaction);
+        }
+    }
+
+    // Внутренний класс Transaction для хранения данных об операциях
+    private class Transaction {
+        private String type;     // Тип операции (Снятие, Платеж, Поступление)
+        private double amount;   // Сумма операции
+        private double balanceAfter; // Баланс после операции
+
+        public Transaction(String type, double amount, double balanceAfter) {
+            this.type = type;
+            this.amount = amount;
+            this.balanceAfter = balanceAfter;
+        }
+
+        // Переопределение метода toString для удобного вывода
+        @Override
+        public String toString() {
+            return String.format("Операция: %s, Сумма: %.2f, Баланс после операции: %.2f", type, amount, balanceAfter);
+        }
+    }
+}
+
+public class AccountTest {
+    public static void main(String[] args) {
+        // Создаем аккаунт с начальным балансом 1000
+        Account account = new Account(1000);
+
+        // Выполняем различные операции
+        account.deposit(500);      // Пополнение счета
+        account.withdraw(200);     // Снятие средств
+        account.payment(150);      // Платеж
+        account.withdraw(1200);    // Попытка снять больше средств, чем есть на счете
+
+        // Вывод всех операций
+        account.printTransactions();
+    }
+}
