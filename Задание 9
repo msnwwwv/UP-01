@@ -1,0 +1,152 @@
+import java.util.Arrays;
+import java.util.Random;
+import java.util.Scanner;
+
+public class MathGame {
+    static final int SIZE = 5; // Размер игрового поля (5x5)
+    static final int[] NUMBERS = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13}; // Числа от 0 до 13
+    static int[][] field = new int[SIZE][SIZE]; // Поле игры
+    static boolean[][] filled = new boolean[SIZE][SIZE]; // Заполненные клетки
+
+    // Таблица 3: Количество чисел в каждой группе
+    static final int[] counts = {4, 4, 4, 4, 4, 3, 3, 3, 3, 2, 2, 2, 2, 1};
+
+    static int[] remainingCounts = Arrays.copyOf(counts, counts.length); // Оставшиеся количества для чисел
+    static Scanner scanner = new Scanner(System.in);
+
+    // Инициализация пустого поля
+    public static void initializeField() {
+        for (int i = 0; i < SIZE; i++) {
+            for (int j = 0; j < SIZE; j++) {
+                field[i][j] = -1; // Изначально все клетки пустые (обозначаем -1)
+            }
+        }
+    }
+
+    // Печать игрового поля
+    public static void printField() {
+        for (int i = 0; i < SIZE; i++) {
+            for (int j = 0; j < SIZE; j++) {
+                if (field[i][j] == -1) {
+                    System.out.print(".\t"); // Пустая клетка
+                } else {
+                    System.out.print(field[i][j] + "\t"); // Заполненная клетка
+                }
+            }
+            System.out.println();
+        }
+    }
+
+    // Проверка, можно ли добавить число (остались ли свободные ячейки для числа)
+    public static boolean canAddNumber(int number) {
+        int index = Arrays.binarySearch(NUMBERS, number);
+        return remainingCounts[index] > 0;
+    }
+
+    // Получение случайного доступного числа
+    public static int getRandomNumber() {
+        Random random = new Random();
+        int index;
+        do {
+            index = random.nextInt(NUMBERS.length);
+        } while (remainingCounts[index] == 0); // Ищем число, которое можно использовать
+        remainingCounts[index]--;
+        return NUMBERS[index];
+    }
+
+    // Ход игрока (человека)
+    public static void playerMove() {
+        System.out.println("Ваш ход. Введите координаты (строка и столбец):");
+        int row, col;
+        do {
+            System.out.print("Строка (0-4): ");
+            row = scanner.nextInt();
+            System.out.print("Столбец (0-4): ");
+            col = scanner.nextInt();
+        } while (row < 0 || row >= SIZE || col < 0 || col >= SIZE || filled[row][col]); // Проверка на корректность хода
+
+        int number;
+        do {
+            System.out.print("Введите число от 0 до 13: ");
+            number = scanner.nextInt();
+        } while (number < 0 || number > 13 || !canAddNumber(number)); // Проверка, можно ли использовать это число
+
+        field[row][col] = number;
+        filled[row][col] = true; // Отмечаем клетку как заполненную
+    }
+
+    // Ход компьютера
+    public static void computerMove() {
+        System.out.println("Ход компьютера:");
+        Random random = new Random();
+        int row, col;
+        do {
+            row = random.nextInt(SIZE);
+            col = random.nextInt(SIZE);
+        } while (filled[row][col]); // Ищем свободную клетку
+
+        int number = getRandomNumber(); // Получаем случайное доступное число
+        field[row][col] = number;
+        filled[row][col] = true; // Отмечаем клетку как заполненную
+        System.out.println("Компьютер поставил " + number + " в клетку (" + row + ", " + col + ")");
+    }
+
+    // Подсчет очков за комбинации
+    public static int calculatePoints() {
+        int points = 0;
+
+        // Проверка на четыре одинаковых числа в строке
+        for (int i = 0; i < SIZE; i++) {
+            for (int j = 0; j <= SIZE - 4; j++) {
+                if (field[i][j] == field[i][j + 1] && field[i][j] == field[i][j + 2] && field[i][j] == field[i][j + 3]) {
+                    points += 160; // Награда за 4 одинаковых числа в ряду
+                }
+            }
+        }
+
+        // Можно добавить дополнительные проверки (столбцы, диагонали и т.д.)
+        return points;
+    }
+
+    // Основной игровой цикл
+    public static void playGame() {
+        initializeField(); // Инициализация пустого поля
+        boolean isPlayerTurn = true; // Ход игрока
+
+        // Игра продолжается, пока есть пустые клетки
+        while (true) {
+            printField(); // Печать текущего состояния поля
+
+            if (isPlayerTurn) {
+                playerMove(); // Ход игрока
+            } else {
+                computerMove(); // Ход компьютера
+            }
+
+            // Проверяем, остались ли свободные клетки
+            boolean hasEmptyCells = false;
+            for (boolean[] row : filled) {
+                for (boolean cell : row) {
+                    if (!cell) {
+                        hasEmptyCells = true;
+                        break;
+                    }
+                }
+            }
+            if (!hasEmptyCells) break; // Если нет свободных клеток, игра заканчивается
+
+            // Смена хода
+            isPlayerTurn = !isPlayerTurn;
+        }
+
+        // Подсчет очков после игры
+        int playerPoints = calculatePoints();
+        System.out.println("Игра завершена.");
+        printField(); // Печать финального состояния поля
+        System.out.println("Ваши очки: " + playerPoints);
+    }
+
+    public static void main(String[] args) {
+        playGame(); // Запуск игры
+    }
+}
