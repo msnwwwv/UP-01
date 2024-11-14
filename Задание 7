@@ -1,0 +1,45 @@
+public class CylinderSectionCoordinates {
+
+    // Класс для хранения 2D координат
+    static class Point {
+        double x, y;
+
+        Point(double x, double y) {
+            this.x = x;
+            this.y = y;
+        }
+
+        @Override
+        public String toString() {
+            return "(" + x + ", " + y + ")";
+        }
+    }
+
+    // Метод для вычисления и отображения осевого сечения
+    public static void calculateSection(double height, double radius) {
+        // Координаты начала и конца осевого сечения
+        Point topIntersection = new Point(0, height);   // Верхняя точка на оси цилиндра
+        Point bottomIntersection = new Point(0, 0);     // Нижняя точка на оси цилиндра
+
+        // Радиус и высота цилиндра
+        System.out.println("Радиус цилиндра: " + radius);
+        System.out.println("Высота цилиндра: " + height);
+
+        // Точки начала и конца осевого сечения
+        System.out.println("Осевое сечение проходит через точки: ");
+        System.out.println("Начальная точка (в верхней грани цилиндра): " + topIntersection);
+        System.out.println("Конечная точка (в нижней грани цилиндра): " + bottomIntersection);
+
+        // Точки пересечения с верхней и нижней гранями цилиндра
+        System.out.println("Точка пересечения с верхней гранью: " + topIntersection);
+        System.out.println("Точка пересечения с нижней гранью: " + bottomIntersection);
+    }
+
+    public static void main(String[] args) {
+        double height = 10.0;  // Высота цилиндра
+        double radius = 5.0;   // Радиус цилиндра
+
+        // Вызываем метод для вычисления осевого сечения
+        calculateSection(height, radius);
+    }
+}
